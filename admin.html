@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>INICIO</title>
+
+        <!-- Bootstrap -->
+        <link href="vista/css/bootstrap.min.css" rel="stylesheet">
+        <link href="vista/css/principal.css" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="vista/images/qfico.ico" />
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <!--
+    <style>
+        #navegador{
+        margin-top: -30px;
+        }
+        #navegador2{
+        margin-top: -30px;
+        }
+    </style>
+        -->
+    </head>
+    <body> <!--style="background: linear-gradient(magenta, violet, blueviolet, darkorchid) ; width: 100%; height: 800px" -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header col-lg-8">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" id="navUsuario">Sesi&oacute;n iniciada:<i class="glyphicon glyphicon-user text-muted">  </i> <font color="red"><span id="logedUser"></span></font></a>
+                    <!--<a class="navbar-brand" href="#" id="navCons">Consultorio:<i class="glyphicon glyphicon-home">  </i> <font color="red"><span id="logedCons"></span></font></a>-->
+                </div>
+                <div id="navbar" class="navbar-collapse collapse col-lg-2">
+                    <a class="navbar-brand" href="vista/html/cambiarClave.html"><i class="glyphicon glyphicon-lock">  </i> <font color="red"><span id="cc">Cambiar Clave</span></font></a>
+
+                </div><!--/.navbar-collapse -->
+                <div id="navbar" class="navbar-collapse collapse col-lg-2">
+                    <form class="navbar-form navbar-right" action="cerrarSesion.php" method="POST">
+                        <button type="submit" class="btn btn-success" id="cerrarSesion">Cerrar sesi&oacute;n</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </nav> 
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron text-center" id="jumbo" style="background-position-x: 0px; background-position-y: 53px; background-repeat: no-repeat">
+            <div class="container">
+                <h1 style="height: 50px; font-family:calibri"></h1><span class="oculto" id="span_acceso"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="hidden" id="id_user" name="id_user">
+        </div>
+
+        <div style="clear: both"></div>
+        <div class="container text-center">
+            <div id="boton"></div>
+        </div>    
+
+
+
+
+        <div class="container">
+            <div class="form-signin">           
+                <a href="#" id="salir" class="btn btn-default btn-lg btn-block">SALIR</a>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="label-info text-center container well col-lg-10"> 
+            <h5>
+                &copy; 2020 DIEGO BILYK (derechos reservados)
+            </h5>
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="vista/js/jquery/jquery-1.11.1.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="vista/js/bootstrap/bootstrap.min.js"></script>
+        <script src="vista/js/jquery/bootbox.js" type="text/javascript"></script>
+        <script src="vista/js/funcionesAdmin.js" type="text/javascript"></script>
+    </body>
+</html>

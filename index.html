@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>INDEX</title>
+
+        <!-- Bootstrap -->
+        <link href="vista/css/bootstrap.min.css" rel="stylesheet">
+        <link href="vista/css/login.css" rel="stylesheet">
+        <link href="vista/css/principal.css" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="vista/images/qfico.ico" />
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!--<a class="navbar-brand" href="vista/html/registro.html" id="navUsuario">Registrarse</a>-->
+                </div>
+                <!--<div id="navbar" class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" id="frmLogin">
+                        <div class="form-group">
+                            <input type="text" placeholder="Usuario" name="user" id="user" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" name="pass" id="pass" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success" id="btnLogin">Ingresar</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </nav> 
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="col-lg-5"></div>
+        <div class="jumbotron text-center" id="jumbo" style="background-position-x: 0px; background-position-y: 15px; background-repeat: no-repeat">
+            <div id ="cabecera" class="container">
+                <h1 style="font-family: calibri">INGRESO MECANICA LIGERA</h1>
+            </div>
+        </div>
+        <div class="container" id="loginError">
+
+        </div>
+        <div class="container well" id="loginPagina">
+            <div class="row">
+                <div class="col-xs-12">
+                    &nbsp;<img src="vista/images/article.png" class="img-responsive img-circle " id="avatar" width="100" height="100" /></div>
+            </div>
+            <form class="login" id="formIngreso">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Usuario" id="user"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Contraseña" id="pass" autocomplete="on"/>
+                </div>
+
+                <button name="Submit" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">INGRESO</button>
+                <div id="message"></div>
+                <div class="checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" value="1" name="remember" />No Cerrar Sesion
+                    </label>
+                    <p class="help-block"><a href="registro.html">Registrarme</a></p>
+                </div>
+            </form>
+        </div>
+        <div class="label-info text-center container well"> 
+            <h5>
+                &copy; 2020 DIEGO BILYK (derechos reservados)
+
+            </h5>
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="vista/js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="vista/js/jquery/md5.js" type="text/javascript"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="vista/js/bootstrap/bootstrap.min.js"></script>
+        <script src="vista/js/funcionesIndex.js" type="text/javascript"></script>
+
+    </body>
+</html>

@@ -1,0 +1,59 @@
+body{
+    background-color: #ffffff;
+}
+.login
+{
+    max-width: 320px;
+    padding: 15px;
+    margin: 0 auto;
+}
+#jumbo{
+  background-color: #ffffff;
+}
+#loginPagina 
+{
+    max-width: 330px; 
+    
+    -webkit-box-shadow: 0px 0px 18px 0px/*(48, 50, 50, 0.48)*/;
+    -webkit-box-shadow: 0px 0px 18px 0px/* (48,50,50,0.48)*/;
+    -moz-box-shadow:    0px 0px 18px 0px/* (48,50,50, 0.48)*/;    
+    -box-shadow:        0px 0px 18px 0px/* (48,50,50, 0.48)*/;
+    border-radius: 6%;
+}
+
+#avatar 
+{
+    width: 96px;
+    height: 96px;
+    margin: 0px auto 10px;
+    display: block;
+    border-radius: 50%;
+}
+
+.center-block 
+{
+  display: block;
+  margin-left: 380px;
+  margin-right: 200px;
+}
+.center-text 
+{
+  display: block;
+  margin-left: 0px;
+  margin-right: 400px;
+}
+
+.center-slide
+{
+  display: block;
+  margin-left: 280px;
+  margin-right: 100px;
+}
+
+.center-detalle 
+{
+  display: block;
+  margin-left: 280px;
+  margin-right: 100px;
+
+}

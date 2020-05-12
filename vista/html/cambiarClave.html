@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>CAMBIO DE CLAVE</title>
+        <link href="../css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
+        <!-- Bootstrap -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/principal.css" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="../images/qfico.ico" />
+        <!--<style>
+            #navegador{
+            margin-top: -30px;
+            }
+        </style>-->
+        <style>
+            #navegador{
+            margin-top: -30px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" id="navUsuario">Sesi&oacute;n iniciada:<i class="glyphicon glyphicon-user text-muted">  </i> <font color="red"><span id="logedUser"></span></font></a>
+                    <a class="navbar-brand" href="#" id="navCons">&Aacute;rea:<i class="glyphicon glyphicon-home">  </i> <font color="red"><span id="logedCons"></span></font></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" action="../../cerrarSesion.php" method="POST">
+                        <button type="submit" class="btn btn-success" id="cerrarSesion">Cerrar sesi&oacute;n</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </nav> 
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron text-center" id="jumbo" style="background-position-x: 0px; background-position-y: 53px; background-repeat: no-repeat">
+            <div class="container">
+                <h1 style="font-family: calibri">MECANICA LIGERA</h1>
+            </div>
+        </div>
+        <div id="botonera"></div>
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">CAMBIAR CLAVE</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-6">
+                <form id="formCambiarClave" class="form-horizontal">
+                    <div class="form-group">
+                        <input class="form-control" type="hidden" id="id_user" name="id_user">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2">Usuario</label>
+                        <div class="form-group col-lg-4">
+                            <input class="form-control" type="text" id="user" name="user" disabled="disabled">
+                        </div>    
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2">Clave Anterior</label>
+                        <div class="form-group col-lg-4">
+                            <input class="form-control" type="password" id="passAnterior" name="passAnterior">
+                        </div>    
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2">Nueva Clave</label>
+                        <div class="form-group col-lg-4">
+                            <input class="form-control" type="password" id="nuevoPass1" name="nuevoPass1">
+                        </div>    
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2">Repetir Nueva Clave</label>
+                        <div class="form-group col-lg-4">
+                            <input class="form-control" type="password" id="nuevoPass2" name="nuevoPass2">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2"></label>
+                        <div class="form-group col-lg-4">
+                            <button type="submit" id="guardar" class="btn btn-primary btn-block">Cambiar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+        <div class="row">
+        <!--<div class="col-lg-1"></div>-->
+        <div class="container">
+            <div class="form-signin">           
+                <a href="#" id="salir" class="btn btn-default btn-lg btn-block">SALIR</a>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="label-info text-center container well col-lg-10"> 
+            <h5>
+                &copy; 2020 DIEGO BILYK (derechos reservados)
+            </h5>
+        </div>
+        </div> 
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="../js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../js/bootstrap/bootstrapValidator.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.dataTables.js" type="text/javascript"></script>
+        <script src="../js/jquery/bootbox.js" type="text/javascript"></script>
+        <script src="../js/funcionesCambiarClave.js" type="text/javascript"></script>
+    </body>
+</html>

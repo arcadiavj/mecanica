@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>SERVICIOS</title>
+        <link href="../css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
+        <!-- Bootstrap -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/principal.css" rel="stylesheet" type="text/css"/>
+        <style>
+            #navegador{
+                margin-top: -30px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" 
+                            class="navbar-toggle collapsed" 
+                            data-toggle="collapse" 
+                            data-target="#navbar" 
+                            aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div id="boton"></div>
+                    <a class="navbar-brand" 
+                       href="#" 
+                       id="navUsuario">Sesi&oacute;n iniciada:<i class="glyphicon glyphicon-user text-muted">  </i> 
+                        <font color="white"><span id="logedUser"></span></font></a>
+                    <a class="navbar-brand" 
+                       href="#" 
+                       id="navCons">Seccion:<i class="glyphicon glyphicon-home">  </i> 
+                        <font color="red"><span id="logedCons"></span></font></a>
+                </div>
+
+
+                <div id="navbar" class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" action="../../cerrarSesion.php" method="POST">
+                        <button type="submit" 
+                                class="btn btn-success" 
+                                id="cerrarSesion">Cerrar sesi&oacute;n
+                        </button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </nav> 
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron text-center" id="jumbo">
+            <div class="container">
+                <h1 style="font-family: calibri">MECANICA - SERVICIOS</h1>
+            </div>
+        </div>
+        <div id="botonera"></div>
+
+
+        <div class="col-lg-12">
+            <h2 class="text-center">SERVICIOS</h2>
+            <!--CAMPO OCULTO PARA EL ID_USER DE LA SESSION DE PHP -->
+            <div class="form-group">
+                <input class="form-control" 
+                       type="hidden" 
+                       id="id_user" 
+                       name="id_user">
+            </div>
+            <div class="form-group">
+                <input class="form-control" 
+                       type="hidden" 
+                       id="id_consultorio" 
+                       name="id_consultorio">
+            </div>
+            <!--fin campo oculto-->
+        </div>
+        <div class="col-lg-12"></div>
+        <div class="row center-slide">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-default">
+                    <div class="col-lg-5"></div>
+                    <div class="container-fluid col-lg-2">
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse col-lg-4 center-block" 
+                             id="bs-example-navbar-collapse-1">
+                            <form class="navbar-form navbar-left" 
+                                  role="search">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+
+                            </form>
+                        </div><!-- /.navbar-collapse -->
+                    </div><!-- /.container-fluid -->
+                    <div class="col-lg-5"></div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="col-lg-3"></div>
+
+        <!-- modal servicio-->
+        <div class="modal fade" 
+             id="modalTiposervicio" 
+             tabindex="-1" 
+             role="dialog" 
+             aria-labelledby="modalTiposervicio" 
+             aria-hidden="true">
+            <div id="modalSer">
+                <div class="modal-content">
+                    <form id="formTipo" 
+                          class="form-horizontal"
+                          data-bv-message="Este valor No es válido"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
+                          data-bv-submitbuttons='button[type="submit"]'
+                          data-bv-trigger="focus blur"
+                          data-bv-live="enabled">
+                        <div class="modal-header" id="mHeader">
+                            <button type="button" 
+                                    class="close" 
+                                    data-dismiss="modal" 
+                                    aria-hidden="true" 
+                                    id="x">&times;
+                            </button>
+                            <h4 class="modal-title text-center" 
+                                id="tituloModal">Nuevo Usuario
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input class="form-control" 
+                                       type="hidden" 
+                                       id="id" 
+                                       name="id">
+                            </div>
+                            <div id="relleno"></div>
+                            <div class="form-group">
+                                <label class='col-lg-3' 
+                                       id="lblNomTipoServicio">Patente Movil
+                                </label>
+                                <div class='col-lg-9'>
+                                    <input class="form-control" 
+                                           type="text" 
+                                           id="patenteMovil" 
+                                           name="nMovil"
+                                           placeholder="Movil"
+                                           data-bv-notempty="true"
+                                           data-bv-stringlength-min="50"
+                                           data-bv-stringlength-max="50"
+                                           data-bv-notempty-message="Ingrese Movil">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class='col-lg-3' 
+                                       id="lblTipo">Tipo Servicio
+                                </label>
+                                <div class='col-lg-9'>
+                                    <select class="form-control" 
+                                            id="comboTipo" 
+                                            name="comboTipo">
+                                    </select>    
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class='col-lg-3' 
+                                       id="lblDescTipo">Observaciones Del Servicio
+                                </label>
+                                <div class='col-lg-9'>
+                                    <textarea class="form-control" 
+                                              id="descripcionTipo" 
+                                              name="dTipo"
+                                              placeholder="Agrege Observacion Del Servicio"
+                                              data-bv-notempty="true"
+                                              data-bv-stringlength-min="50"
+                                              data-bv-stringlength-max="50"
+                                              data-bv-notempty-message="Debe completar Observaciones del servicio">
+
+                                    </textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class='col-lg-3' 
+                                       id="lblComb">KM Recorridos
+                                </label>
+                                <div class='col-lg-9'>
+                                    <input class="form-control" 
+                                           type="text" 
+                                           id="km" 
+                                           name="km"
+                                           placeholder="Km"
+                                           data-bv-notempty="true"
+                                           data-bv-stringlength-min="50"
+                                           data-bv-stringlength-max="50"
+                                           data-bv-notempty-message="km">
+                                </div> 
+                            </div>
+
+
+                            <div id="mensajes"><font color="red"><span id="mensaje"></span></font></div>
+
+
+
+                            <div class="divider"></div>                           
+                            <div class="form-group">
+                                <label class='col-lg-2'></label>
+                                <div class='col-lg-10'>
+                                    <input class="form-control" 
+                                           type="hidden" 
+                                           id="accion" 
+                                           name="accion" 
+                                           value="agregar">
+                                </div>
+                            </div>                           
+                            <div class="form-group">
+                                <label class='col-lg-2'></label>
+                                <div class='col-lg-10'>
+                                    <input class="form-control" 
+                                           type="hidden" 
+                                           id="nombreFormulario" 
+                                           name="nombreFormulario" 
+                                           value="Tiposervicio">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" 
+                                    id="cancelar" 
+                                    name="cancelar" 
+                                    class="btn btn-default" 
+                                    data-dismiss="modal">Cerrar
+                            </button>
+                            <button type="button" 
+                                    id="reporDetalle" 
+                                    name="accion" 
+                                    class="btn btn-primary" 
+                                    value="">Reporte
+                            </button>
+                            <button type="button" 
+                                    id="guardar" 
+                                    name="accion" 
+                                    class="btn btn-primary" 
+                                    value="">Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+        <div class="col-lg-12"></div>
+        <div id="tarjeta"></div>
+        <!--comienzo DataTable de Usuarios -->
+        <div class="row">
+            <!--<div class="col-lg-1"></div>-->
+            <div class="col-lg-12">
+
+                <!-- PRUEBAS DE DATATABLES-->
+                <table id="tablaTiposervicio" 
+                       class="display text-center text-primary" 
+                       cellspacing="0" 
+                       width="100%">
+                    <thead>
+                        <tr>
+                            <th>Selecci&oacute;n</th>
+                            <th>Patente</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Movil</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTiposervicio">
+
+                    </tbody>
+                </table> 
+                <!--FIN PRUEBAS DATATABLE-->    
+            </div>
+            <!--<div class="col-lg-1"></div>-->
+        </div>
+        <div class="row">
+            <div class="container">
+                <div class="form-signin">           
+                    <a href="#" 
+                       id="salir" 
+                       class="btn btn-default btn-lg btn-block">SALIR
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+
+            <div class="label-info text-center container well col-lg-10"> 
+                <h5>
+                    &copy; 2020 DIEGO BILYK (derechos reservados)
+                </h5>
+            </div>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="../js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="../js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../js/jquery.dataTables.js" type="text/javascript"></script>
+        <script src="../js/dataTables.bootstrap.js" type="text/javascript"></script>
+        <script src="../js/bootstrap/bootstrapValidator.min.js"></script>
+        <script src="../js/jquery/bootbox.js" type="text/javascript"></script>
+        <script src="../js/funcionesServicioMecanica.js" type="text/javascript"></script>
+
+
+    </body>
+</html>
