@@ -17,6 +17,27 @@ class SqlQuery {
         $this->refControladorPersistencia = new ControladorPersistencia();
     }
 
+    public function crearBase($datosCampos){//cre< una base de datos
+        $sentencia = "CREATE DATABASE IF NOT EXISTS ".$datosCampos["nombreDB"]."; USE ".$datosCampos["nombreDB"].";" ;//senetcia sql que crea y usa la base de datos
+        $sentencia .= $this->crearTabla($datosCampos);//llama a la funcion de crear tablas
+        return $sentencia;//regresa la sentencia al controlador     
+    }
+    
+    public function crearTabla($datosCampos) {//funcion que se va a encargar de crear las tablas en la base de datos seleccionada
+        for ($index = 0; $index < count($datosCampos); $index++) {//for encargado de recorrer el datoscampo para crear la tabla en la base de datos 
+            $sentencia = " CREATE TABLE IF NOT EXISTS `" . $datosCampos["nombre"] . "`(`" .
+                    "id_" . $datosCampos["nombre"] . "` INT NOT NULL AUTO_INCREMENT, `" .
+                    $datosCampos["nombre"] . "` " . $datosCampos["tipo"] . "(" . $datosCampos["caracteres"] . ") NOT NULL,";
+            $sentencia .= "`fch_creacion` DATETIME NOT NULL, `fch_modificacion` "
+                    . "DATETIME NOT NULL,"
+                    . " `fch_baja` DATETIME NOT NULL," .
+                    "PRIMARY KEY" . "(id_" . $datosCampos["nombre"] . ")" .
+                    ") ENGINE=INNODB AUTO_INCREMENT=55 "
+                    . "DEFAULT CHARSET=latin1;";
+        }
+        return $sentencia;//regresa la sentencia a la funcion crear BD
+    }
+
     public function meta($tabla) {//funcion meta(), se utiliza para obtener los datos de la tabla en cuestion que luego serán mis variables en las sentencias... y también mis claves primarias
         $array = array(); //declaro array donde voy a armar los key a ser utilizados por el resto de los metodos 
         $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
@@ -113,7 +134,7 @@ class SqlQuery {
         $contador = $this->verificarJoin($tabla);//verifico si es join o no
         if ($contador > 1 & $strTabla != "usuario") {//ingreso solo si el contador es mayor a 1 es decir si hay mas de un campo id en la base de datos
             $sentencia = $this->buscarInnerJoin($tabla,$id,$campo);//llamo a la funcion JOIN
-        } else {
+        } else {            
             $sentencia = "SELECT * FROM " . $strTabla . " WHERE fch_baja = '0000-00-00 00:00:00'"; //inserto el nombre del formulario para relizar la consulta desde el controlador        
         }
         return $sentencia; //regreso la sentencia para ser usada..
@@ -171,7 +192,7 @@ class SqlQuery {
         for ($i = 0; $i < count($arrLlaveNum) - 1; $i++) {//uso un for para armar el array
             $consulta .= " INNER JOIN " . $arrLlaveNum[$i+1] . " ON " . $arrLlaveNum[0] . ".id_" . 
                     $arrLlaveNum[$i+1] . " = " . $arrLlaveNum[$i+1] . ".id_" . 
-                    $arrLlaveNum[$i+1];//afrego cuantos campor sea necesario y genero la consulta con todos datos q vienen del array numerico
+                    $arrLlaveNum[$i+1];//agrego cuantos campor sea necesario y genero la consulta con todos datos q vienen del array numerico
         }
         if ($id != NULL){
             $consulta.=" WHERE ".$arrLlaveNum[0].".".$campo." = '".$id."'";
@@ -269,13 +290,19 @@ class SqlQuery {
     }
     
     private function llaveNumerica($array) {//cambio los datos del array del meta por claves con numeros para manejar la sentencia del join
-        $arrayNum= array();//array generado para regresara al llamado de la funcion
+        $arrayNum = array(); //array generado para regresara al llamado de la funcion
         foreach ($array as $llave => $valor) {//for para recorrer el array
-            if(substr($llave,0, 2)== "id"){//solo ingreso si es id... en la base de datos todos los campos comunes deben comenzar con id y correspoderse con los id´s de las otras tablas
-                array_push($arrayNum,substr($llave,3));//sumo a mi array nuevo los datos de las llavas sacando los "id_" que vienen de la BD
+            if (substr($llave, 0, 2) == "id") {//solo ingreso si es id... en la base de datos todos los campos comunes deben comenzar con id y correspoderse con los id´s de las otras tablas
+                array_push($arrayNum, substr($llave, 3)); //sumo a mi array nuevo los datos de las llavas sacando los "id_" que vienen de la BD
             }
         }
-        return $arrayNum;//regreso el array
+        return $arrayNum; //regreso el array
+    }
+
+    public function senteciaModificarUsuarioClave($tabla) {
+        $strTabla = strtolower(substr($tabla, 11));
+        $sentencia = "UPDATE ".$strTabla." SET clave_".$strTabla." =?, fch_modificacion = ? WHERE id_".$strTabla."=?";
+        return $sentencia;
     }
 
 }

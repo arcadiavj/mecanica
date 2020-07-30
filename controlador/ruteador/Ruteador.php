@@ -8,6 +8,7 @@
  */
 $arrayParamGet = filter_input_array(INPUT_GET); //creo un Array con los datos q filtro desde el HTML que vienen con el metodo GET
 $arrayParamPost = filter_input_array(INPUT_POST); //creo un Array con los datos q filtro desde el HTML que vienen con el metodo GET
+//$datosCampos = filter_input_array(INPUT_GET);//descomentar para realizar pruebas harcodeadas a la BD
 if ($arrayParamGet != NULL) {//si los datos vienen por GET ingresa en este if
     $accion = filter_input(INPUT_GET, 'accion'); //filtrando datos cargo la variable accion
     $nombreformulario = filter_input(INPUT_GET, 'nombreFormulario'); //filtrando datos creo la variable nombreFormulario     
@@ -24,7 +25,6 @@ if ($arrayParamGet != NULL) {//si los datos vienen por GET ingresa en este if
       $datosCampos = ["user" => $user, "pass" => $pass];//en realidad no se por que uso estos datos y los de las lineas 15 y 14 por q de ellos no obtendria lo mismo que con la siguiente linea de código */
     $datosCampos = filter_input_array(INPUT_POST); //cargo un array con los datos enviados por POST desde el HTML y evito las tres líneas de código anteriores...
 } 
-
 require_once '../controladoresEspecificos/Controlador' . $nombreformulario . '.php'; //hago el include del controlador correspondiente
 $nombreControlador = "Controlador" . $nombreformulario; //Genero una variable con el nombre del controlador para poder generar un objeto del mismo
 $objControlador = new $nombreControlador(); //instancio el objeto correpondiente al controlador creado
@@ -88,7 +88,11 @@ switch ($accion) {//utilizo la accion que se carga desde el HTML para poder real
         $resultado = $objControlador->$accion($id); //llamo a la acción desde el objeto instanciado anteriormente   
         echo json_encode($resultado); //arreglo json
         break;
-        
+    case "createDB":
+        //$id = $arrayParamGet["id"];
+        $resultado = $objControlador->$accion($datosCampos); //llamo a la acción desde el objeto instanciado anteriormente   
+        echo json_encode($resultado); //arreglo json
+        break;
     
     default:
         break;

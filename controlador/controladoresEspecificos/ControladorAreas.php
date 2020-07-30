@@ -1,29 +1,17 @@
 <?php
 
 require_once 'ControladorGeneral.php';
-require_once 'SqlQuery.php';
+//require_once 'SqlQuery.php';
+require_once 'ControladorMaster.php';
 
 class ControladorAreas extends ControladorGeneral {        
 
     
 
     public function buscar() {//busca usando la clase SqlQuery
-        $buscarUsuario = new SqlQuery(); //instancio la clase
         (string) $tabla = get_class($this); //uso el nombre de la clase que debe coincidir con la BD         
-        try {
-            $this->refControladorPersistencia->get_conexion()->beginTransaction(); //comienza la transacción
-            $statement = $this->refControladorPersistencia->ejecutarSentencia(
-                $buscarUsuario->buscar($tabla)); //senencia armada desde la clase SqlQuery sirve para comenzar la busqueda
-            $arrayUsuario = $statement->fetchAll(PDO::FETCH_ASSOC); //retorna un array asociativo para no duplicar datos
-            $this->refControladorPersistencia->get_conexion()->commit(); //si todo salió bien hace el commit
-            return $arrayUsuario; //regreso el array para poder mostrar los datos en la vista... con Ajax... y dataTable de JavaScript
-        } catch (PDOException $excepcionPDO) {
-            echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
-            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
-        }
+        $master = new ControladorMaster();
+        return $master->buscar($tabla);
     }
 
     public function eliminar($id) {//elimina usando SqlQuery clase
