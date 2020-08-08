@@ -21,11 +21,10 @@ class ControladorCrearBD {
     }
     public function createDB($datosCampos){
         $crear = new SqlQuery();
-        var_dump($datosCampos);
-        $consulta = $crear->crearBase($datosCampos);
+        var_dump($datosCampos["nombre"]);
+        $consulta = $crear->listarTablas($datosCampos["nombre"]);
         var_dump($consulta);
         return $consulta;
-        
         
     }
 }

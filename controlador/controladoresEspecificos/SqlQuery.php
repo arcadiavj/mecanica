@@ -1,7 +1,7 @@
 <?php
 
 require_once '../persistencia/ControladorPersistencia.php'; //utilizo para la conexion
-
+require_once 'ControladorEscritura.php';
 /**
  * Esta clase es generada para manejar los datos y sentencias que vienen de los controladores
  * la idea es no tener que escribir tanto códido en lo q a sentencias sql se refiere... me
@@ -36,6 +36,80 @@ class SqlQuery {
                     . "DEFAULT CHARSET=latin1;";
         }
         return $sentencia;//regresa la sentencia a la funcion crear BD
+    }
+    
+    public function listarTablas($base) {
+        $sentencia = "SHOW FULL TABLES FROM " . $base;
+        $this->respaldo($sentencia, $base);
+        return $sentencia;
+    }
+
+    private function respaldo($sentencia, $base) {
+        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+        $variable = $this->refControladorPersistencia->ejecutarSentencia($sentencia); //realizo la consulta en la BD
+        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+        $this->refControladorPersistencia->get_conexion()->commit();
+        var_dump($var);
+        for ($index = 0; $index < count($var); $index++) {//for para listar las tablas en la base de datos
+            foreach ($var[$index] as $key => $value) {//foreach para leer data de las cabeceras de las bases
+                if ($key == "Tables_in_" . $base) {//limpio el resto de la informacion en la BD
+                    echo $value . "<br>";
+                    $this->showCreate($value);//llamo a la funcion de crear el encabezado de los datos para realizar la insercion
+                    $this->buscarTablaRespaldo($value);//obtengo todos los datos para realizar el respaldo
+                }
+            }
+        }
+        /*SELECT * rea INTO OUTFILE C:\\pepe.txt;
+          The above MySQL statement will take a BACKUP of the publisher TABLE INTO a FILE called publisher_backup.txt located IN the C drive of your windows system.
+
+          USING LOAD DATA INFILE statement, you can RESTORE DATA FROM the delimited TEXT files. */
+        return $var;
+    }
+
+    public function buscarTablaRespaldo($tabla) {//funcion utilizada para obtener todos los datos de la tabla y realizar el respaldo correspondiente
+        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+        $consulta = "SELECT * FROM " . $tabla; //con la consulta DESCRIBE $tabla´(éste es el nombre del controlador que obvio coincide con el de la tabla) obtengo la metadata de la BD
+        $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
+        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+        $this->refControladorPersistencia->get_conexion()->commit();
+        $resultado=$this->recorrerConsulta($var, $tabla);//recorro los datos obtenidos en la consulta para para armar el archivo
+        return $resultado; //regreso el array
+    }
+    
+    public function recorrerConsulta($consulta, $tabla) {//funcion utilizada para recorrer y ordenar los datos de la BD
+        $crear = "insert into `" . $tabla . "`(`";//variable encargada de armar el encabezado 
+        $escribir = new ControladorEscritura();//instancio clase escritura para transportar los datos a un txt
+        foreach ($consulta as $key => $value) {//primer array para recorrer los datos consultados
+            if ($key == 0) {//ingresa solo cuando es el primer indice para obtener el encabezado de la consulta
+                for ($index = 0; $index < 1; $index++) {//for para realizar indexar la primer vez ingresado al foreach
+                    $total = count($value);//variable encargada de de almacenar el total del array
+                    $i = 0;//contador
+                    foreach ($value as $llave => $dato) {//segundo foreach para obtener los datos que vienen en el array
+                        if ($total - 1 == $i) {//cuando llego al final del array inserto los parentesis
+                            $crear .= $llave . "`) values ( ";
+                        } else {//sino sigo mientras existan campos los llene
+                            $crear .= $llave . "`,`";
+                        }
+                        $i++;//sumo uno al contador
+                    }
+                }
+            }
+            foreach ($value as $key1 => $valor) {//este foreach es para llenar los valores que vienen de la tabla despues de haber armando el encabezado
+                $crear .= "`" . $valor . "`,";
+                $escribir->escribir($crear);//llamo a la funcion escribir para armar el archivo de datos
+            }
+        }
+    }
+
+    public function showCreate($tabla){//utilizo esta funcion para mostrar los datos con los que se crearon las tablas
+        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+        $consulta = "SHOW CREATE TABLE " . $tabla; //con la consulta SHOW CREATE TABLE  $tabla´obtengo los datos de la BC
+        $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
+        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+        $this->refControladorPersistencia->get_conexion()->commit();
+        var_dump($var);
+        return $var; //regreso el array
+        
     }
 
     public function meta($tabla) {//funcion meta(), se utiliza para obtener los datos de la tabla en cuestion que luego serán mis variables en las sentencias... y también mis claves primarias
@@ -136,7 +210,7 @@ class SqlQuery {
             $sentencia = $this->buscarInnerJoin($tabla,$id,$campo);//llamo a la funcion JOIN
         } else {            
             $sentencia = "SELECT * FROM " . $strTabla . " WHERE fch_baja = '0000-00-00 00:00:00'"; //inserto el nombre del formulario para relizar la consulta desde el controlador        
-        }
+        }        
         return $sentencia; //regreso la sentencia para ser usada..
     }
     

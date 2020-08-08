@@ -28,6 +28,7 @@ class ControladorMaster {
                     $buscar->buscar($tabla)); //senencia armada desde la clase SqlQuery sirve para comenzar la busqueda
             $array = $statement->fetchAll(PDO::FETCH_ASSOC); //retorna un array asociativo para no duplicar datos
             $this->refControladorPersistencia->get_conexion()->commit(); //si todo salió bien hace el commit            
+            var_dump($array);
             return $array; //regreso el array para poder mostrar los datos en la vista... con Ajax... y dataTable de JavaScript
         } catch (PDOException $excepcionPDO) {
             echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';

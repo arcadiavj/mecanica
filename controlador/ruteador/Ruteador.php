@@ -8,7 +8,7 @@
  */
 $arrayParamGet = filter_input_array(INPUT_GET); //creo un Array con los datos q filtro desde el HTML que vienen con el metodo GET
 $arrayParamPost = filter_input_array(INPUT_POST); //creo un Array con los datos q filtro desde el HTML que vienen con el metodo GET
-//$datosCampos = filter_input_array(INPUT_GET);//descomentar para realizar pruebas harcodeadas a la BD
+$datosCampos = filter_input_array(INPUT_GET);//descomentar para realizar pruebas harcodeadas a la BD
 if ($arrayParamGet != NULL) {//si los datos vienen por GET ingresa en este if
     $accion = filter_input(INPUT_GET, 'accion'); //filtrando datos cargo la variable accion
     $nombreformulario = filter_input(INPUT_GET, 'nombreFormulario'); //filtrando datos creo la variable nombreFormulario     
