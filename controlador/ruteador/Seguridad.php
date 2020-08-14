@@ -18,7 +18,6 @@ if (array_key_exists('accion', $arrayParamPost)) {//si dentro del array existe l
     $usuario = filter_input(INPUT_POST,'user');    
     if (array_key_exists('pass',$arrayParamPost)) {
         $clave = filter_input(INPUT_POST,'pass');
-        $cons = filter_input(INPUT_POST,'consultorio');
         require_once '../controladoresEspecificos/ControladorUsuario.php';
         $cU = new ControladorUsuario();
         $us = base64_decode(base64_decode($usuario));

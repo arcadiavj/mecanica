@@ -3,16 +3,32 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/Conexion.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Seguridad.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorGeneral.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCombustible.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorMovilesu.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCrearBD.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorUsuario.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/SqlQuery.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorAreas.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Sesion.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Ruteador.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorServicios.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesUsuarioMecanica.js</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/html/tipoServicio.html</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/Conexion.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorSitrack.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/html/usuario.html</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorMaster.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesIndex.js</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorEscritura.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCombustible.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorUsuario.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/ControladorPersistencia.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/CerrarSesion.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/DBSentencias.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/config/.env</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/SqlQuery.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/index.html</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/datos.sql</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorAreas.php</file>
         </group>
     </open-files>
 </project-private>

@@ -1,4 +1,4 @@
-c<?php
+<?php
 
 class Conexion {
 
@@ -10,11 +10,11 @@ class Conexion {
             if (filter_input(INPUT_SERVER, "SERVER_NAME") == 'localhost') {
                 $this->_conexion = new PDO("mysql:dbname=" . $entorno['DB_DB'] . ";host=" .
                         $entorno['DB_HOST'], $entorno['USER_DB'], $entorno['PASS_DB'],
-                        array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));                
-            }else{                
+                        array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));
+            } else {
                 $this->_conexion = new PDO("mysql:dbname=" . $entorno['DB_DB'] . ";host=" .
                         $entorno['DB_HOST'], $entorno['USER_DB_PROD'], $entorno['PASS_DB_PROD'],
-                        array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\'')); 
+                        array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));
             }
             $this->_conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {

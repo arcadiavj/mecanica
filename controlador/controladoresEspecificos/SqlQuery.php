@@ -2,6 +2,7 @@
 
 require_once '../persistencia/ControladorPersistencia.php'; //utilizo para la conexion
 require_once 'ControladorEscritura.php';
+
 /**
  * Esta clase es generada para manejar los datos y sentencias que vienen de los controladores
  * la idea es no tener que escribir tanto códido en lo q a sentencias sql se refiere... me
@@ -17,12 +18,12 @@ class SqlQuery {
         $this->refControladorPersistencia = new ControladorPersistencia();
     }
 
-    public function crearBase($datosCampos){//cre< una base de datos
-        $sentencia = "CREATE DATABASE IF NOT EXISTS ".$datosCampos["nombreDB"]."; USE ".$datosCampos["nombreDB"].";" ;//senetcia sql que crea y usa la base de datos
-        $sentencia .= $this->crearTabla($datosCampos);//llama a la funcion de crear tablas
-        return $sentencia;//regresa la sentencia al controlador     
+    public function crearBase($datosCampos) {//crea una base de datos
+        $sentencia = "CREATE DATABASE IF NOT EXISTS " . $datosCampos["nombreDB"] . "; USE " . $datosCampos["nombreDB"] . ";"; //senetcia sql que crea y usa la base de datos
+        $sentencia .= $this->crearTabla($datosCampos); //llama a la funcion de crear tablas
+        return $sentencia; //regresa la sentencia al controlador     
     }
-    
+
     public function crearTabla($datosCampos) {//funcion que se va a encargar de crear las tablas en la base de datos seleccionada
         for ($index = 0; $index < count($datosCampos); $index++) {//for encargado de recorrer el datoscampo para crear la tabla en la base de datos 
             $sentencia = " CREATE TABLE IF NOT EXISTS `" . $datosCampos["nombre"] . "`(`" .
@@ -35,9 +36,9 @@ class SqlQuery {
                     ") ENGINE=INNODB AUTO_INCREMENT=55 "
                     . "DEFAULT CHARSET=latin1;";
         }
-        return $sentencia;//regresa la sentencia a la funcion crear BD
+        return $sentencia; //regresa la sentencia a la funcion crear BD
     }
-    
+
     public function listarTablas($base) {
         $sentencia = "SHOW FULL TABLES FROM " . $base;
         $this->respaldo($sentencia, $base);
@@ -45,21 +46,27 @@ class SqlQuery {
     }
 
     private function respaldo($sentencia, $base) {
-        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
-        $variable = $this->refControladorPersistencia->ejecutarSentencia($sentencia); //realizo la consulta en la BD
-        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
-        $this->refControladorPersistencia->get_conexion()->commit();
-        var_dump($var);
+        $escribir = new ControladorEscritura();
+        try {
+            $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+            $variable = $this->refControladorPersistencia->ejecutarSentencia($sentencia); //realizo la consulta en la BD
+            $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+            $this->refControladorPersistencia->get_conexion()->commit();
+        } catch (PDOException $excepcionPDO) {
+            echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
+            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
+        }
         for ($index = 0; $index < count($var); $index++) {//for para listar las tablas en la base de datos
             foreach ($var[$index] as $key => $value) {//foreach para leer data de las cabeceras de las bases
                 if ($key == "Tables_in_" . $base) {//limpio el resto de la informacion en la BD
-                    echo $value . "<br>";
-                    $this->showCreate($value);//llamo a la funcion de crear el encabezado de los datos para realizar la insercion
-                    $this->buscarTablaRespaldo($value);//obtengo todos los datos para realizar el respaldo
+                    //echo $value . "<br>";*/
+                    $escribo = $this->showCreate($value);//llamo a la funcion de crear el encabezado de los datos para realizar la insercion
+                    $escribir->escribir($escribo);
+                    //$this->buscarTablaRespaldo($value); //obtengo todos los datos para realizar el respaldo
                 }
             }
         }
-        /*SELECT * rea INTO OUTFILE C:\\pepe.txt;
+        /* SELECT * rea INTO OUTFILE C:\\pepe.txt;
           The above MySQL statement will take a BACKUP of the publisher TABLE INTO a FILE called publisher_backup.txt located IN the C drive of your windows system.
 
           USING LOAD DATA INFILE statement, you can RESTORE DATA FROM the delimited TEXT files. */
@@ -67,30 +74,35 @@ class SqlQuery {
     }
 
     public function buscarTablaRespaldo($tabla) {//funcion utilizada para obtener todos los datos de la tabla y realizar el respaldo correspondiente
-        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
-        $consulta = "SELECT * FROM " . $tabla; //con la consulta DESCRIBE $tabla´(éste es el nombre del controlador que obvio coincide con el de la tabla) obtengo la metadata de la BD
-        $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
-        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
-        $this->refControladorPersistencia->get_conexion()->commit();
-        $resultado=$this->recorrerConsulta($var, $tabla);//recorro los datos obtenidos en la consulta para para armar el archivo
+        try {
+            $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+            $consulta = "SELECT * FROM " . $tabla; //con la consulta DESCRIBE $tabla´(éste es el nombre del controlador que obvio coincide con el de la tabla) obtengo la metadata de la BD
+            $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
+            $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+            $this->refControladorPersistencia->get_conexion()->commit();
+            $resultado = $this->recorrerConsulta($var, $tabla); //recorro los datos obtenidos en la consulta para para armar el archivo
+        } catch (PDOException $excepcionPDO) {
+            echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
+            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
+        }
         return $resultado; //regreso el array
     }
-    
+
     public function recorrerConsulta($consulta, $tabla) {//funcion utilizada para recorrer y ordenar los datos de la BD
-        $crear = "insert into `" . $tabla . "`(`";//variable encargada de armar el encabezado 
+        $crear = "insert into `" . $tabla . "`(`"; //variable encargada de armar el encabezado 
         $escribir = new ControladorEscritura();//instancio clase escritura para transportar los datos a un txt
         foreach ($consulta as $key => $value) {//primer array para recorrer los datos consultados
             if ($key == 0) {//ingresa solo cuando es el primer indice para obtener el encabezado de la consulta
                 for ($index = 0; $index < 1; $index++) {//for para realizar indexar la primer vez ingresado al foreach
-                    $total = count($value);//variable encargada de de almacenar el total del array
-                    $i = 0;//contador
+                    $total = count($value); //variable encargada de de almacenar el total del array
+                    $i = 0; //contador
                     foreach ($value as $llave => $dato) {//segundo foreach para obtener los datos que vienen en el array
                         if ($total - 1 == $i) {//cuando llego al final del array inserto los parentesis
                             $crear .= $llave . "`) values ( ";
                         } else {//sino sigo mientras existan campos los llene
                             $crear .= $llave . "`,`";
                         }
-                        $i++;//sumo uno al contador
+                        $i++; //sumo uno al contador
                     }
                 }
             }
@@ -101,15 +113,18 @@ class SqlQuery {
         }
     }
 
-    public function showCreate($tabla){//utilizo esta funcion para mostrar los datos con los que se crearon las tablas
-        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
-        $consulta = "SHOW CREATE TABLE " . $tabla; //con la consulta SHOW CREATE TABLE  $tabla´obtengo los datos de la BC
-        $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
-        $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
-        $this->refControladorPersistencia->get_conexion()->commit();
-        var_dump($var);
+    public function showCreate($tabla) {//utilizo esta funcion para mostrar los datos con los que se crearon las tablas
+        try {
+            $this->refControladorPersistencia->get_conexion()->beginTransaction(); //abro la conexion para leer la BD
+            $consulta = "SHOW CREATE TABLE " . $tabla; //con la consulta SHOW CREATE TABLE  $tabla´obtengo los datos de la BC
+            $variable = $this->refControladorPersistencia->ejecutarSentencia($consulta); //realizo la consulta en la BD
+            $var = $variable->fetchAll(PDO::FETCH_ASSOC); //obtengo los valores
+            $this->refControladorPersistencia->get_conexion()->commit();
+        } catch (PDOException $excepcionPDO) {
+            echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
+            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
+        }
         return $var; //regreso el array
-        
     }
 
     public function meta($tabla) {//funcion meta(), se utiliza para obtener los datos de la tabla en cuestion que luego serán mis variables en las sentencias... y también mis claves primarias
@@ -202,21 +217,21 @@ class SqlQuery {
         return $sentencia; //obvio.... regreso la sentencia
     }
 
-    public function buscar($tabla,$id = NULL, $campo=NULL) {//tuve que generar esta función para no cambiar la de la lógica que usamos en el controlador...
+    public function buscar($tabla, $id = NULL, $campo = NULL) {//tuve que generar esta función para no cambiar la de la lógica que usamos en el controlador...
         $strTabla = strtolower(substr($tabla, 11)); //al obtener de la clase el nombre de la clase de digo que quiero que parta la palabra controlador y me haga la consulta con el nombre del formulario
-        $sentencia = "";//string para guardar la sentencia q voy a devolver al controlador
-        $contador = $this->verificarJoin($tabla);//verifico si es join o no
+        $sentencia = ""; //string para guardar la sentencia q voy a devolver al controlador
+        $contador = $this->verificarJoin($tabla); //verifico si es join o no
         if ($contador > 1 & $strTabla != "usuario") {//ingreso solo si el contador es mayor a 1 es decir si hay mas de un campo id en la base de datos
-            $sentencia = $this->buscarInnerJoin($tabla,$id,$campo);//llamo a la funcion JOIN
-        } else {            
+            $sentencia = $this->buscarInnerJoin($tabla, $id, $campo); //llamo a la funcion JOIN
+        } else {
             $sentencia = "SELECT * FROM " . $strTabla . " WHERE fch_baja = '0000-00-00 00:00:00'"; //inserto el nombre del formulario para relizar la consulta desde el controlador        
-        }        
+        }
         return $sentencia; //regreso la sentencia para ser usada..
     }
-    
-    public function buscarSuma($tabla,$campoSuma,$campoGrupo) {
+
+    public function buscarSuma($tabla, $campoSuma, $campoGrupo) {
         $strTabla = strtolower(substr($tabla, 11)); //al obtener de la clase el nombre de la clase de digo que quiero que parta la palabra controlador y me haga la consulta con el nombre del formulario
-        $sentencia = "SELECT *, SUM(".$campoSuma.") AS 'dato' FROM ".$strTabla." GROUP BY ".$campoGrupo; //string para guardar la sentencia q voy a devolver al controlador
+        $sentencia = "SELECT *, SUM(" . $campoSuma . ") AS 'dato' FROM " . $strTabla . " GROUP BY " . $campoGrupo; //string para guardar la sentencia q voy a devolver al controlador
         return $sentencia;
     }
 
@@ -259,17 +274,17 @@ class SqlQuery {
         return $consulta; //regreso la consulta
     }
 
-    private function buscarInnerJoin($tabla,$id,$campo) {//Ésta función esta todavía en fase de prueba... en realidad lo que me gustaria hacer es ver si en lugar de pasar una tabla secundaria pudiera generar un array para poder pasar los datos de la vista... de esa manera podría leer las todos lo elementos que vienen en el array para poder armar la consulta °¬)
+    private function buscarInnerJoin($tabla, $id, $campo) {//Ésta función esta todavía en fase de prueba... en realidad lo que me gustaria hacer es ver si en lugar de pasar una tabla secundaria pudiera generar un array para poder pasar los datos de la vista... de esa manera podría leer las todos lo elementos que vienen en el array para poder armar la consulta °¬)
         $array = $this->meta($tabla); //armo el array para buscar las relaciones de la tabla
-        $arrLlaveNum = $this->llaveNumerica($array);//cambio el array que obtengo desde la meta y lo convierto en numero para pasarlo por el for        
-        $consulta = "SELECT * FROM ". $arrLlaveNum[0];//inicia la sentencia    
+        $arrLlaveNum = $this->llaveNumerica($array); //cambio el array que obtengo desde la meta y lo convierto en numero para pasarlo por el for        
+        $consulta = "SELECT * FROM " . $arrLlaveNum[0]; //inicia la sentencia    
         for ($i = 0; $i < count($arrLlaveNum) - 1; $i++) {//uso un for para armar el array
-            $consulta .= " INNER JOIN " . $arrLlaveNum[$i+1] . " ON " . $arrLlaveNum[0] . ".id_" . 
-                    $arrLlaveNum[$i+1] . " = " . $arrLlaveNum[$i+1] . ".id_" . 
-                    $arrLlaveNum[$i+1];//agrego cuantos campor sea necesario y genero la consulta con todos datos q vienen del array numerico
+            $consulta .= " INNER JOIN " . $arrLlaveNum[$i + 1] . " ON " . $arrLlaveNum[0] . ".id_" .
+                    $arrLlaveNum[$i + 1] . " = " . $arrLlaveNum[$i + 1] . ".id_" .
+                    $arrLlaveNum[$i + 1]; //agrego cuantos campor sea necesario y genero la consulta con todos datos q vienen del array numerico
         }
-        if ($id != NULL){
-            $consulta.=" WHERE ".$arrLlaveNum[0].".".$campo." = '".$id."'";
+        if ($id != NULL) {
+            $consulta .= " WHERE " . $arrLlaveNum[0] . "." . $campo . " = '" . $id . "'";
         }
         return $consulta; // tal cual lo pienso regreso la función y... magicamente busca con un INNER JOIN  dentro de la BD... @)
     }
@@ -281,7 +296,7 @@ class SqlQuery {
         array_shift($arrayJoin); //elimino el siguiente elemento... tengo que ver si hay una forma mas efctiva de realizar esta funcion,,,, solo por si mando mas datos de la vista .. he pensado que prodria hacer un if donde pregunto si tienen un solo caracter para armar el array
         $consulta = " SELECT * FROM " . $strTabla; //empiezo armando la funcion
         foreach ($arrayJoin as $llave => $valor) {//leo el array 
-            $consulta .= " INNER JOIN " . $valor . " ON " . 
+            $consulta .= " INNER JOIN " . $valor . " ON " .
                     $strTabla . ".id_" . $valor . " = " . $valor . ".id_" . $valor; //coloco los campos correspondientes en orden en el que vienen en el array que generé
         }
         $consulta .= " WHERE " . $strTabla . ".fch_baja = '0000-00-00 00:00:00'"; //finalizo la consulta llamando a la tabla que corresponde e indicando que la fecha de baja no sea 0 o lo que es lo mismo que no esté eliminada
@@ -292,7 +307,7 @@ class SqlQuery {
         $array = $this->meta($tabla); //Traigo los datos de la BD        
         $arrayString = $this->arrayString($array); //ordeno los datos sacando el ID del array
         $strTabla = strtolower(substr($tabla, 11)); //paso a miniscula el nombre de la tabla
-        $consulta = "SELECT COUNT(*) FROM " . $strTabla . " WHERE " . 
+        $consulta = "SELECT COUNT(*) FROM " . $strTabla . " WHERE " .
                 $arrayString . " = '" . $dato . "'"; //genero la consulta con los datos 
         return $consulta; //regreso la consulta ^~)
     }
@@ -343,7 +358,7 @@ class SqlQuery {
 
     public function armarCabecera($cabeceraArray) {//función pensada para armar un array que permita generar la cabecera en la vista
         foreach ($cabeceraArray as $llave => $valor) {
-            echo "<br>" . $llave . "   " . $valor;
+            //echo "<br>" . $llave . "   " . $valor;
         }
     }
 
@@ -353,16 +368,16 @@ class SqlQuery {
     }
 
     private function verificarJoin($tabla) {//funcion que se encarga de verificar si se puede hacer un join de acuerdo a las llaves "id_" que se obtienen de la bd
-        $verifica = $this->meta($tabla);//array q contiene todos las llaves
-        $contador = 0;//contador para determinar si las llaves "id_" se repiten mas de una vez si es ese el caso indica que hay join
+        $verifica = $this->meta($tabla); //array q contiene todos las llaves
+        $contador = 0; //contador para determinar si las llaves "id_" se repiten mas de una vez si es ese el caso indica que hay join
         foreach ($verifica as $llave => $valor) {//recorro el array buscando los id´s
-            if(substr($llave,0, 2)== "id"){//busco en el string de la llave el valor id
-                $contador++;//sumo en el contador
+            if (substr($llave, 0, 2) == "id") {//busco en el string de la llave el valor id
+                $contador++; //sumo en el contador
             }
         }
-        return $contador;//regreso el contador si es mayor a uno.. uso la funcion del join para crear la consulta
+        return $contador; //regreso el contador si es mayor a uno.. uso la funcion del join para crear la consulta
     }
-    
+
     private function llaveNumerica($array) {//cambio los datos del array del meta por claves con numeros para manejar la sentencia del join
         $arrayNum = array(); //array generado para regresara al llamado de la funcion
         foreach ($array as $llave => $valor) {//for para recorrer el array
@@ -375,7 +390,7 @@ class SqlQuery {
 
     public function senteciaModificarUsuarioClave($tabla) {
         $strTabla = strtolower(substr($tabla, 11));
-        $sentencia = "UPDATE ".$strTabla." SET clave_".$strTabla." =?, fch_modificacion = ? WHERE id_".$strTabla."=?";
+        $sentencia = "UPDATE " . $strTabla . " SET clave_" . $strTabla . " =?, fch_modificacion = ? WHERE id_" . $strTabla . "=?";
         return $sentencia;
     }
 

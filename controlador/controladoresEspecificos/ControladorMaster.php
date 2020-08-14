@@ -1,6 +1,6 @@
 <?php
 
-require_once 'ControladorGeneral.php';
+//require_once 'ControladorGeneral.php';
 require_once 'SqlQuery.php';
 require_once '../persistencia/ControladorPersistencia.php';
 /*
@@ -28,7 +28,6 @@ class ControladorMaster {
                     $buscar->buscar($tabla)); //senencia armada desde la clase SqlQuery sirve para comenzar la busqueda
             $array = $statement->fetchAll(PDO::FETCH_ASSOC); //retorna un array asociativo para no duplicar datos
             $this->refControladorPersistencia->get_conexion()->commit(); //si todo salió bien hace el commit            
-            var_dump($array);
             return $array; //regreso el array para poder mostrar los datos en la vista... con Ajax... y dataTable de JavaScript
         } catch (PDOException $excepcionPDO) {
             echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
@@ -129,8 +128,8 @@ class ControladorMaster {
             $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
         }
     }
-    
-    public function buscarId($dato, $tabla){
+
+    public function buscarId($dato, $tabla) {
         $buscar = new SqlQuery();
         try {
             $this->refControladorPersistencia->get_conexion()->beginTransaction();
@@ -146,10 +145,9 @@ class ControladorMaster {
             echo $exc->getTraceAsString();
             $this->refControladorPersistencia->get_conexion()->rollBack();  //si hay algún error hace rollback
         }
-        
     }
-    
-    public function bucarUltimo($tabla){
+
+    public function bucarUltimo($tabla) {
         $ultimo = new SqlQuery();
         try {
             $this->refControladorPersistencia->get_conexion()->beginTransaction();
@@ -205,19 +203,23 @@ class ControladorMaster {
     }
 
     public function verificar($tabla, $datosCampos) {
-        $verifica = new SqlQuery();
-        $this->refControladorPersistencia->get_conexion()->beginTransaction(); //comienza transaccion
-        if ($tabla == "ControladorUsuario") {//uso para diferenciar si es usuario u otra clase
-            $rtaVerifUser = $this->refControladorPersistencia->ejecutarSentencia(
-                    $verifica->verificarExistenciaUsuario($tabla, $datosCampos["usuario"])); //verifico existencia de usuairo
-        } else {
+        try {
+            $verifica = new SqlQuery();
+            $this->refControladorPersistencia->get_conexion()->beginTransaction(); //comienza transaccion
+            if ($tabla == "ControladorUsuario") {//uso para diferenciar si es usuario u otra clase
+                $rtaVerifUser = $this->refControladorPersistencia->ejecutarSentencia(
+                        $verifica->verificarExistenciaUsuario($tabla, $datosCampos["usuario"])); //verifico existencia de usuairo
+            } else {
 
-            $rtaVerifUser = $this->refControladorPersistencia->ejecutarSentencia(
-                    $verifica->verificarExistencia($tabla, $datosCampos[$this->getCampo($datosCampos)])); //verifico si ya hay un usuario con ese nombre 
-        }
-        $existe = $rtaVerifUser->fetch(); //paso a un array
-        $this->refControladorPersistencia->get_conexion()->commit(); //cierro
-        return $existe;
+                $rtaVerifUser = $this->refControladorPersistencia->ejecutarSentencia(
+                        $verifica->verificarExistencia($tabla, $datosCampos[$this->getCampo($datosCampos)])); //verifico si ya hay un usuario con ese nombre 
+            }
+            $existe = $rtaVerifUser->fetch(); //paso a un array
+            $this->refControladorPersistencia->get_conexion()->commit(); //cierro
+        } catch (PDOException $excepcionPDO) {
+            echo "<br>Error PDO: " . $excepcionPDO->getTraceAsString() . '<br>';
+            $this->refControladorPersistencia->get_conexion()->rollBack(); //si salio mal hace un rollback
+        }return $existe;
     }
 
 }

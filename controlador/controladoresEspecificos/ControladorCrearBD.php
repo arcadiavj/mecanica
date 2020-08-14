@@ -14,16 +14,16 @@ require_once 'SqlQuery.php';
  */
 class ControladorCrearBD {
     
-    protected $refControladorPersistencia; //controlador persistencia utilizado para crear la conexion a la BD
+   /* protected $refControladorPersistencia; //controlador persistencia utilizado para crear la conexion a la BD
 
     function __construct() {
         $this->refControladorPersistencia = new ControladorPersistencia();
-    }
+    }*/
     public function createDB($datosCampos){
         $crear = new SqlQuery();
-        var_dump($datosCampos["nombre"]);
+        //var_dump($datosCampos["nombre"]);
         $consulta = $crear->listarTablas($datosCampos["nombre"]);
-        var_dump($consulta);
+        //var_dump($consulta);
         return $consulta;
         
     }

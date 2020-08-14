@@ -13,7 +13,7 @@ class ControladorPersistencia implements DBSentencias {
         $this->_conexion = $db->getConexion();
     }
     public function ejecutarSentencia($query, $parametros = null) {
-//        var_dump($query);
+//       var_dump($query);
 //        var_dump($parametros);
         $statement = $this->_conexion->prepare($query);
         if($parametros) {
