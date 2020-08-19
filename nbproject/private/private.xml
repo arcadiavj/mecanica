@@ -6,9 +6,11 @@
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Seguridad.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorGeneral.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorMovilesu.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio.txt</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCrearBD.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Sesion.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/html/servicios.html</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Ruteador.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorServicios.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesUsuarioMecanica.js</file>
@@ -27,7 +29,6 @@
             <file>file:/C:/xampp/htdocs/Mantenimiento/config/.env</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/SqlQuery.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/index.html</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/datos.sql</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorAreas.php</file>
         </group>
     </open-files>

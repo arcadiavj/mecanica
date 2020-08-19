@@ -40,8 +40,7 @@ class ControladorTiposervicio extends ControladorGeneral {
     }
 
     public function modificar($datosCampos) {//utiliza clase SqlQuery para automatizar consulta
-        $guardar = new SqlQuery(); //instancio objeto de la clase sqlQuery
-        (string) $tabla = get_class($this); //obtengo el nombre de la clase para poder realizar la consulta
+       (string) $tabla = get_class($this); //obtengo el nombre de la clase para poder realizar la consulta
         $master = new ControladorMaster();
         return $master->modificar($tabla, $datosCampos);
     }

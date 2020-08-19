@@ -61,7 +61,7 @@ class SqlQuery {
                 if ($key == "Tables_in_" . $base) {//limpio el resto de la informacion en la BD
                     //echo $value . "<br>";*/
                     $escribo = $this->showCreate($value);//llamo a la funcion de crear el encabezado de los datos para realizar la insercion
-                    $escribir->escribir($escribo);
+                    $escribir->escribirPHP($escribo);
                     //$this->buscarTablaRespaldo($value); //obtengo todos los datos para realizar el respaldo
                 }
             }
