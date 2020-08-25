@@ -16,68 +16,49 @@ class ControladorEscritura {
 
     public function escribirPHP($escribir) {
 
+        $funciones = ['buscar', 'eliminar', 'buscarId', 'guardar', 'bucarUltimo', 'modificar'];
         foreach ($escribir as $key => $value) {
-            foreach ($value as $llave => $valor) {
-//var_dump($value);
-                /* $file = fopen("../controladoresEspecificos/ControladorTiposervicio.txt", "r");
-                  /* while (!feof($file)) {
-                  var_dump(fgets($file));
-                  if (strcasecmp(fgets($file), "class ControladorTiposervicio extends ControladorGeneral {") == 0) {
-                  echo "entre";
-                  //echo fgets($file) . "<br/>";
-                  }
-                  } */
-//fclose($file);
-//var_dump($value);
-
-                $file = fopen("../perCodere/Controlador" . ucfirst($value["Table"]) . ".php", "w");
-                fwrite($file, "<?php" . PHP_EOL);
-                fwrite($file, "require_once 'ControladorGeneral.php';" . PHP_EOL);
-                fwrite($file, "require_once 'ControladorMaster.php';" . PHP_EOL);
-                fwrite($file, "class Controlador" . ucfirst($value["Table"]) . " extends ControladorGeneral {" . PHP_EOL);
-                fwrite($file, "public function buscar() {" . PHP_EOL);
-                fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "return \$master->buscar(\$tabla);" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-                fwrite($file, "public function eliminar(\$id) {" . PHP_EOL);
-                fwrite($file, "(string) \$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "\$master->eliminar(\$tabla, \$id);" . PHP_EOL);
-                fwrite($file, "return ['eliminado'=>'eliminado'];" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-                fwrite($file, " public function buscarUsuarioXId(\$dato) {" . PHP_EOL);
-                fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "return \$master->buscarId(\$dato, \$tabla);" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-                fwrite($file, " public function guardar(\$datosCampos) {" . PHP_EOL);
-                fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "return \$master->guardar(\$tabla,\$datosCampos);" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-
-                fwrite($file, " public function ultimo() {" . PHP_EOL);
-                fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "return \$master->bucarUltimo(\$tabla);" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-
-                fwrite($file, "public function modificar(\$datosCampos) {" . PHP_EOL);
-                fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
-                fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
-                fwrite($file, "return \$master->modificar(\$tabla, \$datosCampos);" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-                fwrite($file, "}" . PHP_EOL);
-
-
-                fclose($file);
-            }
+            $file = fopen("../perCodere/Controlador" . ucfirst($value["Table"]) . ".php", "w");
+            fwrite($file, "<?php" . PHP_EOL);
+            fwrite($file, "require_once 'ControladorGeneral.php';" . PHP_EOL);
+            fwrite($file, "require_once 'ControladorMaster.php';" . PHP_EOL);
+            fwrite($file, "class Controlador" . ucfirst($value["Table"]) . " extends ControladorGeneral {" . PHP_EOL);
+            fclose($file);
+            $this->funciones($funciones,"../perCodere/Controlador" . ucfirst($value["Table"]) . ".php");
+            $f=fopen("../perCodere/Controlador" . ucfirst($value["Table"]) . ".php", "a");
+            fwrite($f, "}" . PHP_EOL);
+            fclose($f);
             $this->escribiJS($value["Table"]);
         }
+    }
 
-//var_dump($file);
-//
+    public function funciones($funciones, $f) {        
+        $file = fopen("../perCodere/" . $f, "a");
+        for ($index = 0; $index < count($funciones); $index++) {
+            if($funciones[$index] == 'eliminar' 
+               ||$funciones[$index] == 'buscarId'
+               ||$funciones[$index] == 'guardar'
+               ||$funciones[$index] == 'modificar'){
+              fwrite($file, "public function " . $funciones[$index] . "(\$datos) {" . PHP_EOL);  
+            } else{
+               fwrite($file, "public function " . $funciones[$index] . "() {" . PHP_EOL); 
+            }           
+            fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
+            fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
+            if ($funciones[$index] == 'eliminar') {
+                fwrite($file, "\$master->" . $funciones[$index] . "(\$tabla, \$datos);" . PHP_EOL);
+                fwrite($file, "return ['eliminado'=>'eliminado'];" . PHP_EOL);
+            } else if($funciones[$index] == 'buscarId'
+                      ||$funciones[$index] == 'guardar'
+                      ||$funciones[$index] == 'modificar'
+                   ){
+                    fwrite($file, "return \$master->" . $funciones[$index] . "(\$tabla, \$datos);" . PHP_EOL);
+                   }else {
+                fwrite($file, "return \$master->" . $funciones[$index] . "(\$tabla);" . PHP_EOL);
+            }
+            fwrite($file, "}" . PHP_EOL);
+        }
+        fclose($file);
     }
 
     public function escribiJS($tabla) {
@@ -197,7 +178,7 @@ class ControladorEscritura {
         fwrite($file, "$('#tablaTiposervicio').DataTable().destroy();}" . PHP_EOL);
         fwrite($file, "$.each(data, function (clave, " . strtolower($t) . ") {" . PHP_EOL);
         fwrite($file, "html += '<tr class=\"text-warning\">' +" . PHP_EOL);
-        fwrite($file, "'<td><a class=\"seleccionar\" data-id_" . strtolower($t) . "=\"' +" .strtolower($t).".id_". strtolower($t) . "+'\"><button class=\"btn btn-info btn-sm\">' +" . PHP_EOL);
+        fwrite($file, "'<td><a class=\"seleccionar\" data-id_" . strtolower($t) . "=\"' +" . strtolower($t) . ".id_" . strtolower($t) . "+'\"><button class=\"btn btn-info btn-sm\">' +" . PHP_EOL);
         fwrite($file, "'<span class=\"glyphicon glyphicon-eye-open left\">  Info</span></button></a></td>' +" . PHP_EOL);
         foreach ($array as $key => $value) {
             fwrite($file, "'<td>' + " . strtolower($t) . "." . $key . "_" . strtolower($t) . " + '</td>' +" . PHP_EOL);
