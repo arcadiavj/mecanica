@@ -32,28 +32,23 @@ class ControladorEscritura {
         }
     }
 
-    public function funciones($funciones, $f) {        
+    public function funciones($funciones, $f) {
         $file = fopen("../perCodere/" . $f, "a");
         for ($index = 0; $index < count($funciones); $index++) {
-            if($funciones[$index] == 'eliminar' 
-               ||$funciones[$index] == 'buscarId'
-               ||$funciones[$index] == 'guardar'
-               ||$funciones[$index] == 'modificar'){
-              fwrite($file, "public function " . $funciones[$index] . "(\$datos) {" . PHP_EOL);  
-            } else{
-               fwrite($file, "public function " . $funciones[$index] . "() {" . PHP_EOL); 
-            }           
+            if ($funciones[$index] == 'eliminar' || $funciones[$index] == 'buscarId' || $funciones[$index] == 'guardar' || $funciones[$index] == 'modificar') {
+                fwrite($file, "public function " . $funciones[$index] . "(\$datos) {" . PHP_EOL);
+            } else {
+                fwrite($file, "public function " . $funciones[$index] . "() {" . PHP_EOL);
+            }
             fwrite($file, "(string)\$tabla = get_class(\$this);" . PHP_EOL);
             fwrite($file, "\$master = new ControladorMaster();" . PHP_EOL);
             if ($funciones[$index] == 'eliminar') {
                 fwrite($file, "\$master->" . $funciones[$index] . "(\$tabla, \$datos);" . PHP_EOL);
                 fwrite($file, "return ['eliminado'=>'eliminado'];" . PHP_EOL);
-            } else if($funciones[$index] == 'buscarId'
-                      ||$funciones[$index] == 'guardar'
-                      ||$funciones[$index] == 'modificar'
-                   ){
-                    fwrite($file, "return \$master->" . $funciones[$index] . "(\$tabla, \$datos);" . PHP_EOL);
-                   }else {
+            } else if ($funciones[$index] == 'buscarId' || $funciones[$index] == 'guardar' || $funciones[$index] == 'modificar'
+            ) {
+                fwrite($file, "return \$master->" . $funciones[$index] . "(\$tabla, \$datos);" . PHP_EOL);
+            } else {
                 fwrite($file, "return \$master->" . $funciones[$index] . "(\$tabla);" . PHP_EOL);
             }
             fwrite($file, "}" . PHP_EOL);
@@ -67,13 +62,15 @@ class ControladorEscritura {
         $array = $sql->meta("Controlador" . $tabla);
         $file = fopen("../perCodere/funciones" . ucfirst($tabla) . ".js", "w");
         fwrite($file, "$(function () {" . PHP_EOL);
-        fwrite($file, "var TipoServicio = {};" . PHP_EOL);
+        fwrite($file, "var ". ucfirst($tabla)." = {};" . PHP_EOL);
         fwrite($file, "var idUsuario = \"\";" . PHP_EOL);
         fwrite($file, "(function (app) {" . PHP_EOL);
         fwrite($file, "app.init = function () {" . PHP_EOL);
         fwrite($file, " app.verificarSesion();" . PHP_EOL);
         fwrite($file, " };" . PHP_EOL);
         fclose($file);
+        $this->bindings("funciones" . ucfirst($tabla) . ".js");
+        $this->cerrarSesion("funciones" . ucfirst($tabla) . ".js");
         $this->desactivarControles($array, "funciones" . ucfirst($tabla) . ".js");
         $this->activarControles($array, "funciones" . ucfirst($tabla) . ".js");
         $this->borrarCampos($array, "funciones" . ucfirst($tabla) . ".js");
@@ -81,11 +78,54 @@ class ControladorEscritura {
         $this->borrarFila(ucfirst($tabla));
         $this->buscar(ucfirst($tabla));
         $this->rellenarDataTable($array, ucfirst($tabla));
+        $this->verificarSesion(ucfirst($tabla));
+        
+    }
+    public function cerrarSesion($tabla){
+        $file = fopen("../perCodere/" . $tabla, "a");
+        fwrite($file, "app.".__FUNCTION__." = function (event) {" . PHP_EOL);
+        fwrite($file, "event.preventDefault();" . PHP_EOL);
+        fwrite($file, "bootbox.confirm({" . PHP_EOL);
+        fwrite($file, "size: 'medium'," . PHP_EOL);
+        fwrite($file, "message: 'Esta seguro que desea finalizar sus sesion de trabajo?'," . PHP_EOL);
+        fwrite($file, "callback: function (result) {" . PHP_EOL);
+        fwrite($file, "if (result) {" . PHP_EOL);
+        fwrite($file, "var url = \"../../controlador/ruteador/CerrarSesion.php\";" . PHP_EOL);
+        fwrite($file, "var datosEnviar = {usuario: idUsuario};" . PHP_EOL);
+        fclose($file);
+        $this->ajax("../perCodere/" . $tabla ,"post");
+        $f=fopen("../perCodere/" . $tabla, "a");
+        fwrite($f, "success: function (datosDevueltos) {" . PHP_EOL);
+        fwrite($f, "document.location.href = \"../../index.html\";" . PHP_EOL);
+        fwrite($f, " }," . PHP_EOL);
+        fwrite($f, "error: function () {" . PHP_EOL);
+        fwrite($f, " alert(\"error al enviar al servidor\");" . PHP_EOL);
+        fwrite($f, " }" . PHP_EOL);
+        fwrite($f, " });" . PHP_EOL);
+        fwrite($f, " }" . PHP_EOL);
+        fwrite($f, " }" . PHP_EOL);
+        fwrite($f, " });" . PHP_EOL);
+        fwrite($f, " };" . PHP_EOL);
+        fwrite($f, " }" . PHP_EOL);
+    }
+    public function bindings($tabla) {
+        $file = fopen("../perCodere/" . $tabla, "a");
+        fwrite($file, "app.bindings = function () {" . PHP_EOL);
+        fwrite($file, "$(\"#cerrarSesion\").on('click', function (event) {" . PHP_EOL);
+        fwrite($file, "alert(idUsuario);" . PHP_EOL);
+        fwrite($file, "app.cerrarSesion(event);" . PHP_EOL);
+        fwrite($file, "});" . PHP_EOL);
+        fwrite($file, "$(\"#salir\").on('click', function (event) {" . PHP_EOL);
+        fwrite($file, "app.cerrarSesion(event);" . PHP_EOL);
+        fwrite($file, "});" . PHP_EOL);
+        fwrite($file, "};" . PHP_EOL);
+        fwrite($file, "}" . PHP_EOL);
+        fclose($file);
     }
 
     public function borrarCampos($array, $f) {
         $file = fopen("../perCodere/" . $f, "a");
-        fwrite($file, "app.borrarCampos = function () {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__." = function () {" . PHP_EOL);
         foreach ($array as $key => $value) {
             fwrite($file, "$('#" . $key . "').val(\"\").html();" . PHP_EOL);
         }
@@ -95,7 +135,7 @@ class ControladorEscritura {
 
     public function activarControles($array, $f) {
         $file = fopen("../perCodere/" . $f, "a");
-        fwrite($file, "app.activarControles = function () {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__." = function () {" . PHP_EOL);
         foreach ($array as $key => $value) {
             fwrite($file, "$('#" . $key . "').removeAttr('disabled');" . PHP_EOL);
         }
@@ -105,7 +145,7 @@ class ControladorEscritura {
 
     public function desactivarControles($array, $f) {
         $file = fopen("../perCodere/" . $f, "a");
-        fwrite($file, "app.desactivarControles = function () {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__." = function () {" . PHP_EOL);
         foreach ($array as $key => $value) {
             fwrite($file, "$('#" . $key . "').attr('disabled', true);" . PHP_EOL);
         }
@@ -115,34 +155,33 @@ class ControladorEscritura {
 
     public function eliminar($t) {
         $file = fopen("../perCodere/funciones" . $t . ".js", "a");
-        fwrite($file, "app.eliminar" . $t . " = function (id) {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__. $t . " = function (id) {" . PHP_EOL);
         fwrite($file, "bootbox.confirm({" . PHP_EOL);
         fwrite($file, "size: 'medium'," . PHP_EOL);
         fwrite($file, "message: \"Esta Seguro que desea Eliminar el " . $t . "?\"," . PHP_EOL);
         fwrite($file, "callback: function (result) {" . PHP_EOL);
         fwrite($file, "if (result) {" . PHP_EOL);
         fwrite($file, "var url = \"../../controlador/ruteador/Ruteador.php?accion=eliminar&nombreFormulario=" . $t . "&id=\" + id;" . PHP_EOL);
-        fwrite($file, "$.ajax({" . PHP_EOL);
-        fwrite($file, "url: url," . PHP_EOL);
-        fwrite($file, "method: \"GET\"," . PHP_EOL);
-        fwrite($file, "dataType: 'json'," . PHP_EOL);
-        fwrite($file, "success: function (data) {" . PHP_EOL);
-        fwrite($file, "app.borrarFilaDataTable(id);" . PHP_EOL);
-        fwrite($file, "}," . PHP_EOL);
-        fwrite($file, "error: function (data) {" . PHP_EOL);
-        fwrite($file, "alert('error');" . PHP_EOL);
-        fwrite($file, "}" . PHP_EOL);
-        fwrite($file, "});" . PHP_EOL);
-        fwrite($file, "}" . PHP_EOL);
-        fwrite($file, "}" . PHP_EOL);
-        fwrite($file, "});" . PHP_EOL);
-        fwrite($file, "};" . PHP_EOL);
         fclose($file);
+        $this->ajax("../perCodere/funciones" . $t . ".js","get");
+        $f=fopen("../perCodere/funciones" . $t . ".js", "a");
+        fwrite($f, "success: function (data) {" . PHP_EOL);
+        fwrite($f, "app.borrarFilaDataTable(id);" . PHP_EOL);
+        fwrite($f, "}," . PHP_EOL);
+        fwrite($f, "error: function (data) {" . PHP_EOL);
+        fwrite($f, "alert('error');" . PHP_EOL);
+        fwrite($f, "}" . PHP_EOL);
+        fwrite($f, "});" . PHP_EOL);
+        fwrite($f, "}" . PHP_EOL);
+        fwrite($f, "}" . PHP_EOL);
+        fwrite($f, "});" . PHP_EOL);
+        fwrite($f, "};" . PHP_EOL);
+        fclose($f);
     }
 
     public function borrarFila($t) {
         $file = fopen("../perCodere/funciones" . $t . ".js", "a");
-        fwrite($file, "app.borrarFilaDataTable = function (id) {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__."DataTable = function (id) {" . PHP_EOL);
         fwrite($file, "var fila = $(\"#cuerpo" . $t . "\").find(\"a[data-id_" . strtolower($t) . "='\" + id + \"']\").parent().parent().remove();" . PHP_EOL);
         fwrite($file, "};" . PHP_EOL);
         fclose($file);
@@ -150,24 +189,23 @@ class ControladorEscritura {
 
     public function buscar($t) {
         $file = fopen("../perCodere/funciones" . $t . ".js", "a");
-        fwrite($file, "app.buscar" . $t . " = function () {" . PHP_EOL);
+        fwrite($file, "app.".__FUNCTION__. $t . " = function () {" . PHP_EOL);
         fwrite($file, "var url = \"../../controlador/ruteador/Ruteador.php?accion=buscar&nombreFormulario=" . $t . "\";" . PHP_EOL);
-        fwrite($file, "$.ajax({" . PHP_EOL);
-        fwrite($file, "url: url," . PHP_EOL);
-        fwrite($file, "method: 'GET'," . PHP_EOL);
-        fwrite($file, "dataType: 'json'," . PHP_EOL);
-        fwrite($file, "success: function (data) {" . PHP_EOL);
-        fwrite($file, "app.rellenarDataTable(data);" . PHP_EOL);
-        fwrite($file, "}," . PHP_EOL);
-        fwrite($file, "error: function (data) {" . PHP_EOL);
-        fwrite($file, "alert('error en buscar " . $t . "');" . PHP_EOL);
-        fwrite($file, "}," . PHP_EOL);
-        fwrite($file, "beforeSend: function (){" . PHP_EOL);
-        fwrite($file, "var dialog = bootbox.dialog({" . PHP_EOL);
-        fwrite($file, "message:\"<p class='text-center'><img src='../../vista/images/ajax-loader.gif'></p>\"," . PHP_EOL);
-        fwrite($file, "closeButton: false});" . PHP_EOL);
-        fwrite($file, "dialog.modal('hide');}});};" . PHP_EOL);
         fclose($file);
+        $this->ajax("../perCodere/funciones" . $t . ".js","get");
+        $f=fopen("../perCodere/funciones" . $t . ".js", "a");
+        fwrite($f, "success: function (data) {" . PHP_EOL);
+        fwrite($f, "app.rellenarDataTable(data);" . PHP_EOL);
+        fwrite($f, "}," . PHP_EOL);
+        fwrite($f, "error: function (data) {" . PHP_EOL);
+        fwrite($f, "alert('error en buscar " . $t . "');" . PHP_EOL);
+        fwrite($f, "}," . PHP_EOL);
+        fwrite($f, "beforeSend: function (){" . PHP_EOL);
+        fwrite($f, "var dialog = bootbox.dialog({" . PHP_EOL);
+        fwrite($f, "message:\"<p class='text-center'><img src='../../vista/images/ajax-loader.gif'></p>\"," . PHP_EOL);
+        fwrite($f, "closeButton: false});" . PHP_EOL);
+        fwrite($f, "dialog.modal('hide');}});};" . PHP_EOL);
+        fclose($f);
     }
 
     public function rellenarDataTable($array, $t) {
@@ -201,5 +239,48 @@ class ControladorEscritura {
         fwrite($file, "};" . PHP_EOL);
         fclose($file);
     }
+    public function verificarSesion($tabla){
+        $file = fopen("../perCodere/funciones" . $tabla . ".js", "a");
+        fwrite($file, "app.verificarSesion = function () {" . PHP_EOL);
+        fwrite($file, "var url = \"../../controlador/ruteador/Sesion.php\";" . PHP_EOL);
+        fclose($file);
+        $this->ajax("../perCodere/funciones" . $tabla . ".js","post");
+        $f=fopen("../perCodere/funciones" . $tabla . ".js", "a");
+        fwrite($f, "success: function (datos) {" . PHP_EOL);
+        fwrite($f, "if (typeof datos['id_usuario'] != 'undefined' && typeof datos['tipoAcceso_usuario'] != 'undefined') {" . PHP_EOL);
+        fwrite($f, "$(\"#id_user\").val(datos.id_usuario);" . PHP_EOL);
+        fwrite($f, "var tA = datos.tipoAcceso_usuario;" . PHP_EOL);        
+        fwrite($f, "idUsuario = datos.id_usuario;" . PHP_EOL);
+        fwrite($f, "if (parseInt(tA) === 1 || parseInt(tA) === 2 ) {" . PHP_EOL);
+        fwrite($f, "$(\"#logedUser\").html(datos.usuario_usuario);" . PHP_EOL);
+        fwrite($f, "var acceso = datos.tipoAcceso_usuario;" . PHP_EOL);
+        fwrite($f, "app.buscar".$tabla."();" . PHP_EOL);
+        fwrite($f, "app.bindings();" . PHP_EOL);
+        fwrite($f, "app.cargarBotones(acceso);" . PHP_EOL);
+        fwrite($f, "} else {" . PHP_EOL);
+        fwrite($f, "location.href = \"../../admin.html\";" . PHP_EOL);
+        fwrite($f, "} else {" . PHP_EOL);
+        fwrite($f, "location.href = \"../../index.html\";" . PHP_EOL);
+        fwrite($f, "}" . PHP_EOL);
+        fwrite($f, "app.verificarSesion = function () {" . PHP_EOL);
+        fwrite($f, "}}," . PHP_EOL);
+        fwrite($f, "error: function (data) {" . PHP_EOL);
+        fwrite($f, "location.href = \"../../index.html\";" . PHP_EOL);        
+        fwrite($f, " }});};" . PHP_EOL);   
+    }
+    
+    public function ajax($f, $tipo) {
+        $file = fopen($f, "a");
+        fwrite($file, "$.ajax({" . PHP_EOL);
+        fwrite($file, "url: url," . PHP_EOL);
+        if ($tipo == 'get') {
+            fwrite($file, "method: 'GET'," . PHP_EOL);
+        } else {
+            fwrite($file, "method: 'POST'," . PHP_EOL);
+        }
+        fwrite($file, "dataType: 'json'," . PHP_EOL);
+        fclose($file);
+    }
 
 }
+

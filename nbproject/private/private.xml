@@ -4,31 +4,23 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorGeneral.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorFechaserv.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCrearBD.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesTipoServicioMecanica.js</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio_sirve.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorUsuario.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/ruteador/Ruteador.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorEscritura.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesUsuarioMecanica.js</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesCambiarClave.js</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/Conexion.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorAuditoria.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorTiposervicio.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorMaster.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesIndex.js</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesTipoServicioMecanica.js</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorAreas.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorTiposervicio_sirve.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorServicios.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorEscritura.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorCombustible.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorMovilesu.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorUsuario.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/persistencia/DBSentencias.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/SqlQuery.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorAreas.php</file>
-            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/perCodere/ControladorSitrack.php</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/controlador/controladoresEspecificos/ControladorMaster.php</file>
             <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesServicioMecanica.js</file>
+            <file>file:/C:/xampp/htdocs/Mantenimiento/vista/js/funcionesIndex.js</file>
         </group>
     </open-files>
 </project-private>
