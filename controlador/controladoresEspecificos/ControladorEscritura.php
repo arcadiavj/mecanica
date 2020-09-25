@@ -79,6 +79,7 @@ class ControladorEscritura {
         $this->buscar(ucfirst($tabla));
         $this->rellenarDataTable($array, ucfirst($tabla));
         $this->verificarSesion(ucfirst($tabla));
+        $this->appBinding($array, $tabla);
         
     }
     public function cerrarSesion($tabla){
@@ -280,6 +281,77 @@ class ControladorEscritura {
         }
         fwrite($file, "dataType: 'json'," . PHP_EOL);
         fclose($file);
+    }
+    
+    public function appBinding($array, $tabla){
+       
+         $file = fopen("../perCodere/funciones" . $tabla . ".js", "a");
+         fwrite($file, "app.bindings = function () {" . PHP_EOL);
+         foreach ($array as $key => $value) {
+             if(substr($key, 0,3)=='fch' ){
+                fwrite($file, "$('#txt".ucfirst(substr($key, 4))."').attr('disabled', true);" . PHP_EOL);
+             }
+             
+        }
+         fwrite($file, "$('#agregar').on('click', function (event) {" . PHP_EOL);
+         fwrite($file, "event.preventDefault();" . PHP_EOL);
+         fwrite($file, "app.activarControles();" . PHP_EOL);
+         foreach ($array as $key => $value) {
+             if(substr($key, 0,3)=='fch' ){
+                fwrite($file, "$('#div".ucfirst(substr($key, 4))."').hide();" . PHP_EOL);
+             }
+             
+        }
+        fwrite($file, "$('#id').val(0);" . PHP_EOL);
+        fwrite($file, "$('#mHeader').removeClass();" . PHP_EOL);
+        fwrite($file, "$('#mHeader').attr(\"class\", \"modal-header bg-primary\");" . PHP_EOL);
+        fwrite($file, "$('#tituloModal').html(\"Nuevo".ucfirst($tabla)."\");" . PHP_EOL);
+        fwrite($file, "$('#modal".ucfirst($tabla)."').modal({show: true, backdrop: 'static', keyboard: false});" . PHP_EOL);
+        fwrite($file, "$('#accion').attr(\"value\", \"guardar\");" . PHP_EOL);
+        fwrite($file, "$('#guardar').html(\"Agregar\");" . PHP_EOL);
+        fwrite($file, "$('#guardar').show();" . PHP_EOL);
+        fwrite($file, "$('#reporDetalle').hide();" . PHP_EOL);
+        fwrite($file, "});" . PHP_EOL);
+        fwrite($file, "$('#modal".ucfirst($tabla)."').on('shown.bs.modal', function () {" . PHP_EOL);
+        fwrite($file, "$('#nombre".ucfirst($tabla)."').focus();" . PHP_EOL);
+        fwrite($file, "});" . PHP_EOL);
+        fwrite($file, "$('#cuerpo".ucfirst($tabla)."').on('click', '.editar', function (event) {" . PHP_EOL);
+        fwrite($file, "event.preventDefault();" . PHP_EOL);
+        fwrite($file, "$('#id').val($(this).attr(\"data-id_".$tabla."\"));" . PHP_EOL);
+        // TODO: Hacer funcion foreach para recorrer campo fecha
+        foreach ($array as $key => $value) {
+             if(substr($key, 0,3)=='fch' ){
+                fwrite($file, "$('#div".ucfirst(substr($key, 4))."').show();" . PHP_EOL);
+             }             
+        }
+        fwrite($file, "$('#mHeader').removeClass();" . PHP_EOL);
+        fwrite($file, "$('#mHeader').attr('class', 'modal-header bg-success');" . PHP_EOL);
+        $i=0;
+        var_dump($array);
+        foreach ($array as $key => $value) {
+            $nombre ="";
+            $next = "";            
+             if(substr($key, 0,3)=='fch' ){
+               $i=0; $nombre= substr($key, 4);
+                $i++;
+             }else{
+                $nombre = $key;
+                $i++;
+             }
+             for ($index = 0; $index < $i; $index++) {
+               $next .= "next().";
+            }
+           fwrite($file, "$('#".$nombre."').val($(this).parent().parent().children().first().".$next."html());" . PHP_EOL);
+           //echo "$('#".$nombre."').val($(this).parent().parent().children().first().".$next."html());<br>";
+        }
+        fwrite($file, "app.activarControles();" . PHP_EOL);
+        fwrite($file, "$('#guardar').html('Modificar');" . PHP_EOL);
+        fwrite($file, "$('#accion').attr('value', 'modificar');" . PHP_EOL);
+        fwrite($file, "$('#tituloModal').html(\"Editar".ucfirst($tabla)."\");" . PHP_EOL);   
+        fwrite($file, "$('#modal".ucfirst($tabla)."').modal({show: true, backdrop: 'static', keyboard: false});" . PHP_EOL);
+        fwrite($file, "$('#guardar').show();" . PHP_EOL);
+        fwrite($file, "$('#reporDetalle').hide();" . PHP_EOL);
+        fwrite($file, "});" . PHP_EOL);
     }
 
 }
